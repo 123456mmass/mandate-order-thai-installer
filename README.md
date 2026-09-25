@@ -92,6 +92,25 @@ permissive licences (TW-Kai — SIL OFL 1.1 / OGDL 1.0; Playfair Display,
 Noto Serif Thai, Noto Sans — SIL OFL 1.1; Roboto, Droid Sans Fallback —
 Apache 2.0). The game's own fonts are not redistributed.
 
+## Antivirus scans
+
+The executable is not code-signed, so a few engines flag it heuristically.
+VirusTotal reports **3 detections out of 70** for
+`MOThaiInstaller.exe`, SHA-256
+`c126181d4264614529ef6e324d48bbc740fb90f7cfecb8243767c9720b036358`:
+
+| Engine | Verdict | Reading |
+|---|---|---|
+| Bkav Pro | `W32.Malware.5EA008D9` | heuristic; Bkav flags most unsigned installers |
+| CrowdStrike Falcon | `Win/malicious_confidence_60% (D)` | an ML confidence score, not a signature |
+| McAfee | `Ti!C126181D4264` | generic "unknown file" heuristic — the suffix is the file's own hash prefix, so no signature matched |
+
+No engine named a malware family. VirusTotal also tags the file `overlay`,
+which is the appended `.pak` described above: a 55 MB high-entropy blob after
+the PE image is what the machine-learning verdicts key on, not any observed
+behaviour. The remedy for this class of verdict is code signing, which this
+mod does not have.
+
 ## Build
 
 Requirements: `g++` (MinGW-w64, 64-bit), Python 3 with no extra packages.
