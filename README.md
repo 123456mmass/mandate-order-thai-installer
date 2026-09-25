@@ -118,6 +118,7 @@ Requirements: `g++` (MinGW-w64, 64-bit), Python 3 with no extra packages.
 ```sh
 # 1. compile (from this directory)
 g++ -O2 -std=c++17 -mwindows -static -static-libgcc -static-libstdc++ \
+    -Wl,--no-insert-timestamp \
     MOThaiInstaller.cpp -o MOThaiInstaller.exe \
     -lcomctl32 -lshell32 -lole32 -luuid
 
@@ -127,6 +128,12 @@ python make_payload.py MOThaiInstaller.exe <path-to>.pak
 # 3. assemble the release zip (expects ./licenses/ and ./*.txt beside it)
 python package_dist.py
 ```
+
+`-Wl,--no-insert-timestamp` is not cosmetic. Without it the linker stamps the
+PE header with the current time, so two builds of identical source differ in a
+few bytes and any SHA-256 published for the released file stops describing it.
+With it, rebuilding this source against the same `.pak` reproduces the released
+executable byte for byte — verified by building twice and comparing.
 
 `make_payload.py` writes the footer described above. `package_dist.py` writes
 a STORED (uncompressed) zip containing the executable, the licence texts and
